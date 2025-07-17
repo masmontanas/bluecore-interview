@@ -1,0 +1,11 @@
+default:
+  redis_url: "redis://localhost:6379"
+  redis_max_connections: 10
+  redis_failure_threshold: 3
+  redis_recovery_time: 30
+
+production:
+  redis_url: "redis://redis:6379"
+  redis_max_connections: 20
+  redis_failure_threshold: 5
+  redis_recovery_time: 60
