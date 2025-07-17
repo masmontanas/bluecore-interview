@@ -16,7 +16,7 @@ def get_router() -> APIRouter:
     async def healthcheck():
         return HealthCheckResponse
 
-    @router.get("/", response_model=CountResponse)
+    @router.get("/read", response_model=CountResponse)
     async def get_count(request: Request):
         try:
             redis = await get_redis(request)
@@ -30,7 +30,7 @@ def get_router() -> APIRouter:
             _logger.error(str(e))
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=_SERVICE_UNAVAILABLE_MESSAGE)
 
-    @router.post("/", response_model=CountResponse)
+    @router.post("/write", response_model=CountResponse)
     async def increment_count(request: Request):
         try:
             redis = await get_redis(request)

@@ -25,10 +25,10 @@ def test_redis_circuit_breaker_trips_for_get(client, caplog):
     caplog.set_level("WARNING")
 
     for _ in range(3):
-        res = client.get("/")
+        res = client.get("/read")
         assert res.status_code == 503
 
-    res = client.get("/")
+    res = client.get("/read")
     assert res.status_code == 503
     assert any("Circuit breaker opened" in m for m in caplog.messages)
 
@@ -44,9 +44,9 @@ def test_redis_circuit_breaker_trips_for_post(client, caplog):
     caplog.set_level("WARNING")
 
     for _ in range(3):
-        res = client.post("/")
+        res = client.post("/write")
         assert res.status_code == 503
 
-    res = client.post("/")
+    res = client.post("/write")
     assert res.status_code == 503
     assert any("Circuit breaker is OPEN," in m for m in caplog.messages)

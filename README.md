@@ -63,7 +63,7 @@ kubectl config use-context minikube
 
 # From root directory of repo
 minikube image build -t counter-api:latest .
-kubectl apply -f k8s/counter-app
+kubectl apply -f k8s/counter-app.yaml
 
 # Test using a port-forward and navigate to http://localhost:8080/docs
 kubectl port-forward service/counter-api 8080:808
