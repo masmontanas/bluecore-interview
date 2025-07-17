@@ -103,3 +103,12 @@ However, support has been added to allow overwriting sensitive values with envir
 with the expectation being that a k8s secret resource would contain sensitive values and be mounted as env-variables.
 
 Redis connectivity isn't currently protected with a password, which would not be viable for production.
+
+### Scaling considerations
+
+The application itself is already intended for scaling on demand, with full async support and a circuit-breaker
+to tolerate availability issues with dependencies (redis, in this case).  The circuit-breaker
+will ensure that unnecessary i/o doesn't occur when redis is unavailable leading to runaway resource consumption.
+
+Between full async support, the circuit-breaker, and the implementation of the HPA most scaling considerations should be addressed.
+
