@@ -6,12 +6,12 @@ A minimal FastAPI application that increments a counter in Redis using a service
 
 ## 🧰 Features
 
-- ✅ Circuit breaker for Redis to gracefully handle outages
-- ✅ Environment-specific configuration via `config.yaml` + environment variables
-- ✅ JSON-structured logging
-- ✅ Graceful shutdown with Redis cleanup
-- ✅ Kubernetes deployment-ready (for testing via minikube)
-- ✅ Pytest-based unit testing
+- ✅ Circuit breaker for Redis to gracefully handle outages.
+- ✅ Environment-specific configuration via `config.yaml` + environment variable support for sensitive values.
+- ✅ JSON-structured logging.
+- ✅ Graceful shutdown with Redis cleanup.
+- ✅ Kubernetes deployment-ready (for testing via minikube).
+- ✅ Pytest-based unit testing.
 ---
 
 ## 🚀 Quick Start (Local Development)
@@ -70,3 +70,36 @@ kubectl port-forward service/counter-api 8080:808
 
 ```
 
+## Reviewer notes
+
+Most of the time and attention was applied toward making the application itself robust, as well as providing
+the building blocks for the k8s configuration that would be required for a production deployment.
+
+Though the k8s resources are defined in a manifest file, it should outline all the necessary configuration options
+for a production-ready deployment (probes, secure runtime config, hpa, etc.)
+
+In a situation where the app would need to be developed under a time constraint to hand off to a more junior developer,
+the basic building blocks and reference material would be there, allowing the colleague to focus on:
+- CI/CD
+  - Publishing the image to a remote registry
+  - Release management with integration testing wired up
+- linting
+- type-checking
+- configuration management
+- Creating a helm chart, or using a CD tool like ArgoCD
+- Writing integration tests to run during release
+
+### Exposing this service publicly
+
+In order to properly expose this service for public use, the following would be needed at a minimum.
+
+1. An ingress or api resource, to expose the service via a public ip.
+2. A TLS certificate, preferably through an integration with LetsEncrypt (via CertManager) or an equivalent service.
+
+### Additional Security Considerations
+
+Configuration options are currently defined for each environment in the config.yaml file.
+However, support has been added to allow overwriting sensitive values with environment variables,
+with the expectation being that a k8s secret resource would contain sensitive values and be mounted as env-variables.
+
+Redis connectivity isn't currently protected with a password, which would not be viable for production.
