@@ -5,8 +5,8 @@ from contextlib import asynccontextmanager
 from app.api.routes import get_router
 from app.services.redis import close_redis_connection
 from app.settings import get_settings
-from app.utils.circuit_breaker import CircuitBreaker
-from app.utils.logging import configure_json_logging
+from app.lib.circuit_breaker import CircuitBreaker
+from app.lib.logging import configure_json_logging
 
 
 def create_app() -> FastAPI:

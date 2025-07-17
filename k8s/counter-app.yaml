@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: counter
+  name: counter-api
 spec:
   selector:
     matchLabels:
-      app: counter
+      app: counter-api
   template:
     metadata:
       labels:
-        app: counter
+        app: counter-api
     spec:
       securityContext:
         runAsUser: 10001
@@ -17,13 +17,14 @@ spec:
         fsGroup: 10001
         runAsNonRoot: true
       containers:
-        - name: api
-          image: counter:latest
+        - name: counter-api
+          image: docker.io/library/counter-api:latest
+          imagePullPolicy: "Never"
           ports:
             - containerPort: 8080
           env:
             - name: APP_ENV
-              value: "development"
+              value: "test"
           livenessProbe:
             httpGet:
               path: /healthz
@@ -53,14 +54,14 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: counter-hpa
+  name: counter-api-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: counter
-  minReplicas: 2
-  maxReplicas: 5
+    name: counter-api
+  minReplicas: 5
+  maxReplicas: 100
   metrics:
     - type: Resource
       resource:
@@ -72,10 +73,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: counter
+  name: counter-api
 spec:
   selector:
-    app: counter
+    app: counter-api
   ports:
     - protocol: TCP
       port: 8080

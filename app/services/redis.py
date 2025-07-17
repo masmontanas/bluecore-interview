@@ -1,7 +1,7 @@
 import logging
 from redis.asyncio import Redis
 from fastapi import Request
-from app.utils.circuit_breaker import CircuitBreaker
+from app.lib.circuit_breaker import CircuitBreaker
 
 _logger = logging.getLogger(__name__)
 
